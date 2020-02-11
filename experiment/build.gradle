@@ -1,0 +1,52 @@
+apply plugin: 'java'
+
+apply plugin: 'application'
+
+mainClassName = 'cs223w2020.Experiment'
+
+
+version = 0.1
+sourceCompatibility = 1.11
+
+sourceSets {
+   main {
+      java {
+         srcDir 'src'
+      }
+      resources {
+         srcDirs 'resources'
+      }
+   }
+	
+   test {
+      java {
+         srcDir 'test'
+      }
+   }
+}
+
+repositories {
+   mavenCentral()
+}
+
+dependencies {
+   implementation 'org.slf4j:slf4j-api:1.7.12'
+}
+
+
+jar {
+   manifest {
+      attributes 'Main-Class': 'cs223w2020.Experiment'
+   }
+}
+
+// task jar(type: Jar) {
+// 	manifest {
+//         attributes 'Implementation-Title': 'Gradle Jar File Example',  
+//         	'Implementation-Version': version,
+//         	'Main-Class': 'cs223w2020.Experiment'
+//     }
+//     baseName = project.name + '-all'
+//     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+//     with jar
+// }

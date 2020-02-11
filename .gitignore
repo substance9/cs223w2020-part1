@@ -1,0 +1,7 @@
+.DS_Store
+postgres_data/
+mysql_data/
+inputs/
+*/.gradle/
+.gradle/
+*/build/
