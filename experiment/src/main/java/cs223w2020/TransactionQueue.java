@@ -1,30 +1,31 @@
 package main.java.cs223w2020;
 
 
-import main.java.cs223w2020.model.Operation;
+import main.java.cs223w2020.model.Transaction;
 
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
-public class OperationQueue {
-    private BlockingQueue<Operation> oQueue;
+public class TransactionQueue {
+    private BlockingQueue<Transaction> txQueue;
 
-    public OperationQueue() {
-        oQueue = new LinkedBlockingQueue<>();
+    public TransactionQueue() {
+        txQueue = new LinkedBlockingQueue<>();
     }
 
-    public void put(Operation op) {
+    public void put(Transaction tx) {
         try {
-            oQueue.put(op);
+            txQueue.put(tx);
         } catch (Exception e){
             e.printStackTrace();
         }
     }
 
-    public Operation take() {
-        Operation ret = null;
+    public Transaction take() {
+        //blocking
+        Transaction ret = null;
         try {
-            ret = oQueue.take();
+            ret = txQueue.take();
             return ret;
         } catch (Exception e) {
             e.printStackTrace();
@@ -32,10 +33,11 @@ public class OperationQueue {
         return ret;
     }
 
-    public Operation poll() {
-        Operation ret = null;
+    public Transaction poll() {
+        //non-blocking
+        Transaction ret = null;
         try {
-            ret = oQueue.poll();
+            ret = txQueue.poll();
             return ret;
         } catch (Exception e) {
             e.printStackTrace();
@@ -44,7 +46,7 @@ public class OperationQueue {
     }
 
     public int getSize(){
-        return oQueue.size();
+        return txQueue.size();
     }
 
 }

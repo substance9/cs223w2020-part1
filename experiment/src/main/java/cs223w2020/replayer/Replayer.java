@@ -84,7 +84,7 @@ public class Replayer implements Runnable
             currOpTime = op.timestamp.getTime();
 
             if (lastOpTime == currOpTime){
-                opQueue.put(op);
+                sendOperation(op);
                 continue;
             }else{
                 currTimeStampExeTime = System.currentTimeMillis();
@@ -98,7 +98,8 @@ public class Replayer implements Runnable
                         System.out.println(e);
                     }
                 }
-                opQueue.put(op);
+
+                sendOperation(op);
                 lastTimeStampExeTime = currTimeStampExeTime;
             }
             lastOpTime = currOpTime;
@@ -121,6 +122,11 @@ public class Replayer implements Runnable
         System.out.println("Loading Queries File: " + queryFilePath); 
         queriesFileLoader.load(l);
         //System.out.println(l.size());
+    }
+
+    private void sendOperation(Operation op){
+        op.setActualArrivalTimeToNow();
+        opQueue.put(op);
     }
 } 
 
