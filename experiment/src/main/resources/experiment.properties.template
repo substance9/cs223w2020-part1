@@ -13,8 +13,9 @@ replayer.experiment_duration = 20
 # Select the tx simulator policy: single,
 simulator.policy = single
 
+# for Tx Sender
 # Select which DB to use: postgres or mysql
-simulator.db = postgres
+sender.db = postgres
 
 # MAX number of active transactions
-simulator.mpl = 10
+sender.mpl = 10

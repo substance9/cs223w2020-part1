@@ -22,6 +22,7 @@ public class OperationQueue {
     }
 
     public Operation take() {
+        //blocking
         Operation ret = null;
         try {
             ret = oQueue.take();
@@ -33,6 +34,7 @@ public class OperationQueue {
     }
 
     public Operation poll() {
+        //non-blocking
         Operation ret = null;
         try {
             ret = oQueue.poll();
