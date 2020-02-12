@@ -17,6 +17,8 @@ public class SingleTxSimulator extends TxSimulator
     public void processNewOperation(Operation op){
         Transaction tx = new Transaction();
         tx.appendOperation(op);
+
+        System.out.println(tx);
         sendTransaction(tx);
     }
 

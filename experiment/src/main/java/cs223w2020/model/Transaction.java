@@ -39,5 +39,11 @@ public class Transaction {
         Timestamp ts = new Timestamp(time);
         return ts;
     }
+
+    @Override
+    public String toString()
+    {
+         return "Operations: " + operations;
+    }
 }
 
