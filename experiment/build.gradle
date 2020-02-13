@@ -1,5 +1,5 @@
+apply plugin: 'java-library'
 apply plugin: 'java'
-
 apply plugin: 'application'
 
 mainClassName = 'cs223w2020.Experiment'
@@ -31,22 +31,22 @@ repositories {
 
 dependencies {
    //implementation 'org.slf4j:slf4j-api:1.7.12'
-   implementation 'com.zaxxer:HikariCP:3.4.1'
-   implementation 'mysql:mysql-connector-java:8.0.19'
-   implementation 'org.postgresql:postgresql:42.2.5'
+   compile 'com.zaxxer:HikariCP:3.4.1'
+   compile 'mysql:mysql-connector-java:8.0.19'
+   compile 'org.postgresql:postgresql:42.2.5'
 }
 
 
-jar {
-   manifest {
-      attributes 'Main-Class': 'cs223w2020.Experiment',
-      "Class-Path": configurations.compile.collect { it.getName() }.join(' ')
-   }
-}
+// jar {
+//    manifest {
+//       attributes 'Main-Class': 'cs223w2020.Experiment',
+//       "Class-Path": configurations.compile.collect { it.getName() }.join(' ')
+//    }
+// }
 
 task fatJar(type: Jar) {
 	manifest {
-        attributes 'Implementation-Title': 'Gradle Jar File Example',  
+        attributes 'Implementation-Title': 'CS223 W2020 Project Part 1',  
         	'Implementation-Version': version,
         	'Main-Class': 'cs223w2020.Experiment',
          "Class-Path": configurations.compile.collect { it.getName() }.join(' ')

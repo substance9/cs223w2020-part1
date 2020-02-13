@@ -20,12 +20,12 @@ public class Experiment {
         OperationQueue oQueue = new OperationQueue();
         TransactionQueue tQueue = new TransactionQueue();
 
-        //Start Transaction Sender
-        // Thread txProcessor = new Thread(new TxProcessor(prop.getProperty("sender.db"),
-        //                                             prop.getProperty("replayer.concurrency"),
-        //                                             Integer.parseInt(prop.getProperty("sender.mpl")),
-        //                                             tQueue)); 
-        // txProcessor.start();
+        //Start Transaction Processor
+        Thread txProcessor = new Thread(new TxProcessor(prop.getProperty("processor.db"),
+                                                    prop.getProperty("replayer.concurrency"),
+                                                    Integer.parseInt(prop.getProperty("processor.mpl")),
+                                                    tQueue)); 
+        txProcessor.start();
 
         //Start Transaction Simulator according to the specified policy
         String txSimulationPolicy = prop.getProperty("simulator.policy");
@@ -99,8 +99,8 @@ public class Experiment {
             System.out.println("--replayer.concurrency:\t\t"+prop.getProperty("replayer.concurrency"));
             System.out.println("--replayer.experiment_duration:\t"+prop.getProperty("replayer.experiment_duration"));
             System.out.println("--simulator.policy:\t\t"+prop.getProperty("simulator.policy"));
-            System.out.println("--simulator.db:\t\t\t"+prop.getProperty("sender.db"));
-            System.out.println("--simulator.mpl:\t\t"+prop.getProperty("sender.mpl"));
+            System.out.println("--simulator.db:\t\t\t"+prop.getProperty("processor.db"));
+            System.out.println("--simulator.mpl:\t\t"+prop.getProperty("processor.mpl"));
 
         } catch (IOException ex) {
             ex.printStackTrace();

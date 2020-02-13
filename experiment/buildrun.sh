@@ -1,5 +1,6 @@
 #!/bin/bash
+gradle clean
 
-gradle jar
+gradle fatJar
 
-java -jar -Xmx32g build/libs/experiment-0.1.jar
+java -jar -Xmx32g build/libs/experiment-all-0.1.jar
