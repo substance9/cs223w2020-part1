@@ -37,16 +37,13 @@ public class TxExecutor implements Runnable
         try{
             //System.out.println("try executing");
             con = connectionPool.getConnection();
+            con.setAutoCommit(false);
 
             for(int i = 0; i < tx.operations.size(); i++){
                 op = tx.operations.get(i);
                 if(op.operationStr.equals("SELECT")){
                     pst = con.prepareStatement(op.sqlStr);
                     rs = pst.executeQuery();
-        
-                    while (rs.next()) {
-                        ;
-                    }
                 }
                 else if(op.operationStr.equals("INSERT")){
                     pst = con.prepareStatement(op.sqlStr);
@@ -58,6 +55,12 @@ public class TxExecutor implements Runnable
             }
 
             con.commit();
+            if(op.operationStr.equals("SELECT")){
+                while (rs.next()) {
+                    ;
+                }
+            }
+            
         } catch (SQLException ex){
             ex.printStackTrace();
         }finally {
