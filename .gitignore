@@ -5,4 +5,5 @@ inputs/
 */.gradle/
 .gradle/
 */build/
-experiment.properties
+*/experiment.properties
+results/

@@ -87,6 +87,10 @@ public class Replayer implements Runnable
             if (i == 0){
                 lastOpTime = op.timestamp.getTime();
             }
+            if (op.operationStr.equals("END")){
+                sendOperation(op);
+                return;
+            }
             currOpTime = op.timestamp.getTime();
 
             opCounter = opCounter + 1;
