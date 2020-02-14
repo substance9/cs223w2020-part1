@@ -8,7 +8,9 @@ import main.java.cs223w2020.OperationQueue;
 import main.java.cs223w2020.TransactionQueue;
 
 public class SingleTxSimulator extends TxSimulator 
-{ 
+{
+    private OperationQueue opQueue;
+
     public SingleTxSimulator(OperationQueue opQueue, TransactionQueue txQueue){
         super(opQueue, txQueue);
     }
@@ -17,6 +19,7 @@ public class SingleTxSimulator extends TxSimulator
     public void processNewOperation(Operation op){
         Transaction tx = new Transaction();
         tx.appendOperation(op);
+        System.out.println("OP Queue size: " + tx.operations.size());
         sendTransaction(tx);
     }
 

@@ -37,9 +37,9 @@ public class Experiment {
         if (txSimulationPolicy.equals("single")){
             txSimulator = new Thread(new SingleTxSimulator(oQueue, tQueue)); 
         }
-        //else if (){
-
-        //}
+        else if (txSimulationPolicy.equals("batch")){
+            txSimulator = new Thread(new BatchTxSimulator(oQueue, tQueue)); 
+        }
         else{
             System.out.println("ERROR: Transaction simulation policy " + txSimulationPolicy + " not supported");
             return;

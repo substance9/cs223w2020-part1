@@ -43,7 +43,7 @@ public class Transaction {
     @Override
     public String toString()
     {
-         return "Operations: " + operations;
+         return "Transaction: " + operations;
     }
 }
 
