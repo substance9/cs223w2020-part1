@@ -38,6 +38,7 @@ public class QueriesFileLoader
                     if (state == 0){
                         state = 1;
                     }
+                    realLine.append(" ");
                     realLine.append(line);
                 }
                 else if (line.length() == 1){

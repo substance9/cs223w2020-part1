@@ -23,17 +23,19 @@ public class TxProcessor implements Runnable
     private String datasetConcurrency;
     private int mpl;
     private String concurrency;
+    private int isolationLevel;
 
     private ExecutorService threadPool;
     private HikariDataSource  connectionPool;
 
     private Thread resultAggregator;
 
-    public TxProcessor(String dbName, String datasetConcurrency, int mpl, TransactionQueue txQueue){
+    public TxProcessor(String dbName, String datasetConcurrency, int mpl, int isolationLevel, TransactionQueue txQueue, String resOutputDir){
         this.dbName = dbName;
         this.mpl = mpl;
         this.txQueue = txQueue;
         this.datasetConcurrency = datasetConcurrency;
+        this.isolationLevel = isolationLevel;
 
         Properties prop = getHikariDbProperties(dbName);
         String jdbcUrlBase = prop.getProperty("jdbcUrl");
@@ -42,13 +44,14 @@ public class TxProcessor implements Runnable
         HikariConfig cfg = new HikariConfig(prop);
         cfg.setJdbcUrl(jdbcUrl);
         cfg.setMaximumPoolSize(mpl);
+        //cfg.setTransactionIsolation(isolationLevel);
         cfg.setAutoCommit(false);
         connectionPool = new HikariDataSource(cfg);
 
         threadPool = Executors.newFixedThreadPool(mpl); 
 
         resQueue = new TransactionQueue();
-        resultAggregator = new Thread(new ResultAggregator(resQueue)); 
+        resultAggregator = new Thread(new ResultAggregator(resQueue, resOutputDir)); 
         resultAggregator.start(); 
     }
 
@@ -70,10 +73,17 @@ public class TxProcessor implements Runnable
         while(true){
             //1. get the transaction from queue
             tx = txQueue.take();
-            //2. Construct TxExecutor with the (1)transaction, (2)connectionPool (3)result (transaction) queue
-            txexecutor = new TxExecutor(tx, connectionPool, resQueue);
-            //3. Get a thread from pool and execute
-            threadPool.execute(txexecutor);
+            if (tx.operations.size()>0){
+                //2. Construct TxExecutor with the (1)transaction, (2)connectionPool (3)result (transaction) queue (4)set isolation level for each transaction
+                txexecutor = new TxExecutor(tx, connectionPool, isolationLevel, resQueue);
+                //3. Get a thread from pool and execute
+                threadPool.execute(txexecutor);
+            }
+            else{
+                //end mark transaction
+                resQueue.put(tx);
+                return;
+            }
         }
     }
 } 

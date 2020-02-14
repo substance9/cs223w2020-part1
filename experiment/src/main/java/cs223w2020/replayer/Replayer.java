@@ -22,6 +22,7 @@ public class Replayer implements Runnable
     private int expDurationMinutes;
     private OperationQueue opQueue;
     private Float sFactor;
+    private int opCounter;
 
     public Replayer(String inputDirStr, String concurrencyStr, int expDurationMinutes, OperationQueue opQueue){
         opList = new ArrayList<Operation>(); 
@@ -36,6 +37,7 @@ public class Replayer implements Runnable
         this.expDurationMinutes = expDurationMinutes;
         this.opQueue = opQueue;
 
+        opCounter = 0;
         init();
     }
 
@@ -64,6 +66,10 @@ public class Replayer implements Runnable
         sFactor = expDurationSeconds / actualDurationSeconds;
         System.out.println("sFactor = " + String.valueOf(sFactor));
         // System.out.println("2 minutes in " + String.valueOf(sFactor * 120) + "s");
+
+        //Add end mark
+        Operation endMarkOp = new Operation("END", null, null, null);
+        opList.add(endMarkOp);
     }
 
     public void run() 
@@ -82,6 +88,11 @@ public class Replayer implements Runnable
                 lastOpTime = op.timestamp.getTime();
             }
             currOpTime = op.timestamp.getTime();
+
+            opCounter = opCounter + 1;
+            if (opCounter%10000 == 0){
+                System.out.println("Sent " + String.valueOf(opCounter) + " operations");
+            }
 
             if (lastOpTime == currOpTime){
                 sendOperation(op);
@@ -103,7 +114,10 @@ public class Replayer implements Runnable
                 lastTimeStampExeTime = currTimeStampExeTime;
             }
             lastOpTime = currOpTime;
+            
         }
+
+        System.out.println("\n\nAll Files have been Loaded!\n\n");
     } 
 
     private void loadObsSqlFileToList(ArrayList<Operation> l){

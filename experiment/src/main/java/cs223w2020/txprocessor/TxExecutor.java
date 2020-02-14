@@ -18,12 +18,14 @@ public class TxExecutor implements Runnable
 { 
     private Transaction tx;
     private HikariDataSource  connectionPool;
+    private int isolationLevel;
     private TransactionQueue resQueue;
 
-    public TxExecutor(Transaction tx, HikariDataSource connectionPool, TransactionQueue resQueue){
+    public TxExecutor(Transaction tx, HikariDataSource connectionPool, int isolationLevel, TransactionQueue resQueue){
         this.tx = tx;
         this.resQueue = resQueue;
         this.connectionPool = connectionPool;
+        this.isolationLevel = isolationLevel;
     }
 
     public void run() 
@@ -37,10 +39,14 @@ public class TxExecutor implements Runnable
         try{
             //System.out.println("try executing");
             con = connectionPool.getConnection();
+            con.setTransactionIsolation(isolationLevel);
             con.setAutoCommit(false);
+
+            tx.setBeginTimeToNow();
 
             for(int i = 0; i < tx.operations.size(); i++){
                 op = tx.operations.get(i);
+                
                 if(op.operationStr.equals("SELECT")){
                     pst = con.prepareStatement(op.sqlStr);
                     rs = pst.executeQuery();
@@ -48,6 +54,7 @@ public class TxExecutor implements Runnable
                 else if(op.operationStr.equals("INSERT")){
                     pst = con.prepareStatement(op.sqlStr);
                     numRowsAffected = pst.executeUpdate();
+                    ;
                 }
                 else{
                     System.out.println("ERROR: Operation Type " + op.operationStr + " not supported");
@@ -55,6 +62,7 @@ public class TxExecutor implements Runnable
             }
 
             con.commit();
+            tx.setEndTimeToNow();
             if(op.operationStr.equals("SELECT")){
                 while (rs.next()) {
                     ;
@@ -62,6 +70,7 @@ public class TxExecutor implements Runnable
             }
             
         } catch (SQLException ex){
+            System.out.println(tx.operations.get(0).sqlStr);
             ex.printStackTrace();
         }finally {
             try {
@@ -77,9 +86,8 @@ public class TxExecutor implements Runnable
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
-
-            resQueue.put(tx);
         }
+        resQueue.put(tx);
     }
 
     

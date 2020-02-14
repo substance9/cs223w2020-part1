@@ -3,6 +3,8 @@ package cs223w2020;
 import java.io.IOException;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Properties;
 
 import main.java.cs223w2020.OperationQueue;
@@ -24,7 +26,9 @@ public class Experiment {
         Thread txProcessor = new Thread(new TxProcessor(prop.getProperty("processor.db"),
                                                     prop.getProperty("replayer.concurrency"),
                                                     Integer.parseInt(prop.getProperty("processor.mpl")),
-                                                    tQueue)); 
+                                                    Integer.parseInt(prop.getProperty("processor.tx_isolation_level")),
+                                                    tQueue,
+                                                    prop.getProperty("result.output_dir"))); 
         txProcessor.start();
 
         //Start Transaction Simulator according to the specified policy
@@ -99,13 +103,21 @@ public class Experiment {
             System.out.println("--replayer.concurrency:\t\t"+prop.getProperty("replayer.concurrency"));
             System.out.println("--replayer.experiment_duration:\t"+prop.getProperty("replayer.experiment_duration"));
             System.out.println("--simulator.policy:\t\t"+prop.getProperty("simulator.policy"));
-            System.out.println("--simulator.db:\t\t\t"+prop.getProperty("processor.db"));
-            System.out.println("--simulator.mpl:\t\t"+prop.getProperty("processor.mpl"));
+            System.out.println("--processor.db:\t\t\t"+prop.getProperty("processor.db"));
+            System.out.println("--processor.mpl:\t\t"+prop.getProperty("processor.mpl"));
+            System.out.println("--processor.tx_isolation_level:\t\t"+prop.getProperty("processor.tx_isolation_level"));
 
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-
+            
+        Date date= new Date();
+        long time = date.getTime();
+        Timestamp ts = new Timestamp(time);
+        String resultDir = prop.getProperty("result.output_path")+ts.toString();
+        prop.setProperty("result.output_dir", resultDir);
+        System.out.println("--result.output_dir:\t"+resultDir);
+        
         return prop;
     }
  }

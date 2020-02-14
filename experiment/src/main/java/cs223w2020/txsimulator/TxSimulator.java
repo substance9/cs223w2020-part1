@@ -23,10 +23,19 @@ public class TxSimulator implements Runnable
         Operation op;
         Date date;
         long time;
+        int opCount = 0;
         while(true){
             op = opQueue.poll();
-            if(op != null){
-                processNewOperation(op);
+            if(!(op == null)){
+                //System.out.println(op);
+                if(op.operationStr.equals("END")){
+                    Transaction tx = new Transaction();
+                    sendTransaction(tx);
+                    return;
+                }
+                else{
+                    processNewOperation(op);
+                }
             }
             date = new Date();
             time = date.getTime();
