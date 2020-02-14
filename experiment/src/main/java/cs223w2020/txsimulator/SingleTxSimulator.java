@@ -19,7 +19,7 @@ public class SingleTxSimulator extends TxSimulator
     public void processNewOperation(Operation op){
         Transaction tx = new Transaction();
         tx.appendOperation(op);
-        System.out.println("OP Queue size: " + tx.operations.size());
+        //System.out.println("OP Queue size: " + tx.operations.size());
         sendTransaction(tx);
     }
 

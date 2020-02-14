@@ -38,6 +38,14 @@ public class TxProcessor implements Runnable
         this.isolationLevel = isolationLevel;
 
         Properties prop = getHikariDbProperties(dbName);
+        if (dbName.equals("mysql")){
+            try{
+                Class.forName("com.mysql.jdbc.Driver").getDeclaredConstructor().newInstance();
+            }
+            catch(Exception ex){
+                ex.printStackTrace();
+            }
+        }
         String jdbcUrlBase = prop.getProperty("jdbcUrl");
         String jdbcUrl = jdbcUrlBase + "cs223w2020_"+ datasetConcurrency + "_concurrency";
 
