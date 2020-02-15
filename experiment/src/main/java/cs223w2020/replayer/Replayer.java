@@ -24,11 +24,16 @@ public class Replayer implements Runnable
     private Float sFactor;
     private int opCounter;
 
-    public Replayer(String inputDirStr, String concurrencyStr, int expDurationMinutes, OperationQueue opQueue){
+    public Replayer(String inputDirStr, String dbName, String concurrencyStr, int expDurationMinutes, OperationQueue opQueue){
         opList = new ArrayList<Operation>(); 
         obsFilePath = inputDirStr+"data/"+ concurrencyStr + "_concurrency/" + "observation_" + concurrencyStr + "_concurrency.sql";
         semObsFilePath = inputDirStr+"data/"+ concurrencyStr + "_concurrency/" + "semantic_observation_" + concurrencyStr + "_concurrency.sql";
-        queryFilePath = inputDirStr+"queries/"+ concurrencyStr + "_concurrency/" + "queries.txt";
+        if(dbName.equals("mysql")){
+            queryFilePath = inputDirStr+"queries/"+ concurrencyStr + "_concurrency/" + "queries_mysql.txt";
+        }
+        else{
+            queryFilePath = inputDirStr+"queries/"+ concurrencyStr + "_concurrency/" + "queries.txt";
+        }
 
         obsSqlFileLoader = new InsertionSqlFileLoader(obsFilePath);
         semObsSqlFileLoader = new InsertionSqlFileLoader(semObsFilePath);

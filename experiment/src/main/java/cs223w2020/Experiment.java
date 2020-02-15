@@ -48,6 +48,7 @@ public class Experiment {
 
         // //Start the replayer to read and send data
         Thread replayer = new Thread(new Replayer(prop.getProperty("replayer.inputs_directory"), 
+                                                    prop.getProperty("processor.db"),
                                                     prop.getProperty("replayer.concurrency"),
                                                     Integer.parseInt(prop.getProperty("replayer.experiment_duration")),
                                                     oQueue)); 
