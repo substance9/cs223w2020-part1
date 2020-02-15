@@ -90,6 +90,24 @@ public class TxProcessor implements Runnable
             else{
                 //end mark transaction
                 resQueue.put(tx);
+                try
+                { 
+                    resultAggregator.join(); 
+                } 
+                catch(Exception ex) 
+                { 
+                    System.out.println("Exception has been" + " caught" + ex); 
+                }
+
+                try{
+                    Thread.sleep(1500);
+                }catch(Exception ex) 
+                { 
+                    System.out.println("Exception has been" + " caught" + ex); 
+                }
+
+                connectionPool.close();
+                threadPool.shutdown();
                 return;
             }
         }

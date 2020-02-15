@@ -49,19 +49,39 @@ public class ResultAggregator implements Runnable {
     {
         try {
             Writer txResultWriter = Files.newBufferedWriter(Paths.get(outputDirStr +"/transaction_results.csv"));
-            CSVPrinter txResultCsvPrinter = new CSVPrinter(txResultWriter, CSVFormat.DEFAULT.withHeader("TxNumber", "NumOfOps", "ConstructTime", "BeginTime", "EndTime"));
+            CSVPrinter txResultCsvPrinter = new CSVPrinter(txResultWriter, CSVFormat.DEFAULT.withHeader("TxNumber", "Type", "NumOfOps", "ConstructTime", "BeginTime", "EndTime", "AvgOpResponseTime"));
 
             Transaction restx = null;
+            String txType = null;
+            long totalOpResponseTimeInTx = 0;
+            long avgOpResponseTimeInTx = 0;
+            long opResponseTime = 0;
             while(true){
                 restx = resQueue.take();
                 if (restx.operations.size()>0){
                     //Do something to update or output the results
                     //System.out.println(restx);
+                    if (restx.operations.size()==1 && restx.operations.get(0).operationStr.equals("SELECT")){
+                        txType = "QUERY";
+                    }
+                    else{
+                        txType = "INSERT";
+                    }
+                    int numOps = restx.operations.size();
+                    for(int j = 0; j < restx.operations.size(); j++){
+                        opResponseTime = restx.endTime.getTime() - restx.operations.get(j).actualArrivalTime.getTime();
+                        totalOpResponseTimeInTx = totalOpResponseTimeInTx + opResponseTime;
+                    }
+                    avgOpResponseTimeInTx = totalOpResponseTimeInTx / numOps;
                     TxCount = TxCount + 1;
-                    txResultCsvPrinter.printRecord(TxCount,restx.operations.size(),restx.constructTime.getTime(),restx.beginTime.getTime(),restx.endTime.getTime());
+                    txResultCsvPrinter.printRecord(TxCount,txType,numOps,restx.constructTime.getTime(),restx.beginTime.getTime(),restx.endTime.getTime(),avgOpResponseTimeInTx);
                     if (TxCount%10000 == 0){
                         System.out.println("Processed " + String.valueOf(TxCount) + " transactions");
                     }
+
+                    totalOpResponseTimeInTx = 0;
+                    avgOpResponseTimeInTx = 0;
+                    opResponseTime = 0;
                 }
                 else{
                     //Experiment is end

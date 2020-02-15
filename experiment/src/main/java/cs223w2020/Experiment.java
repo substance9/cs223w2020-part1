@@ -76,14 +76,14 @@ public class Experiment {
             System.out.println("Exception has been" + " caught" + ex); 
         } 
 
-        // try
-        // { 
-        //     txProcessor.join(); 
-        // } 
-        // catch(Exception ex) 
-        // { 
-        //     System.out.println("Exception has been" + " caught" + ex); 
-        // } 
+        try
+        { 
+            txProcessor.join(); 
+        } 
+        catch(Exception ex) 
+        { 
+            System.out.println("Exception has been" + " caught" + ex); 
+        } 
 
         //long expEndTime = System.currentTimeMillis();
         //System.out.println("Experiment took " + String.valueOf(expEndTime-expStartTime) + "ms to finish");
