@@ -3,6 +3,8 @@ package main.java.cs223w2020.replayer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.sql.Timestamp;
 
@@ -79,6 +81,14 @@ public class Replayer implements Runnable
 
     public void run() 
     { 
+        //...........
+        Date date = new Date();
+        long startTime = date.getTime();
+        long duration = 2 * 60 * 1000;
+        long endTime = 0;
+        //...........
+
+
         // Start Ingesting
         long lastOpTime = 0;
         long currOpTime = 0;
@@ -87,7 +97,21 @@ public class Replayer implements Runnable
         long exeTimeDelta = 0;
         long opTimestampDelta = 0;
         long expectedTimeDelta = 0;
+        
         for(int i = 0; i < opList.size(); i++){
+            //...............
+            // date = new Date();
+            // endTime = date.getTime();
+            // if(endTime >= startTime + duration){
+            //     Operation endMarkOp = new Operation("END", null, null, null);
+            //     sendOperation(endMarkOp);
+            //     System.exit(0);
+            //     return;
+            // }
+            
+            //...............
+
+
             Operation op = opList.get(i);
             if (i == 0){
                 lastOpTime = op.timestamp.getTime();

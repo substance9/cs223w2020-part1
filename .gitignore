@@ -7,3 +7,6 @@ inputs/
 */build/
 */experiment.properties
 results/
+*/output.txt
+*.csv
+*.txt

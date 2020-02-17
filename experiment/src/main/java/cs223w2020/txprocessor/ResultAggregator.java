@@ -75,7 +75,7 @@ public class ResultAggregator implements Runnable {
                     avgOpResponseTimeInTx = totalOpResponseTimeInTx / numOps;
                     TxCount = TxCount + 1;
                     txResultCsvPrinter.printRecord(TxCount,txType,numOps,restx.constructTime.getTime(),restx.beginTime.getTime(),restx.endTime.getTime(),avgOpResponseTimeInTx);
-                    if (TxCount%10000 == 0){
+                    if (TxCount%1000 == 0){
                         System.out.println("Processed " + String.valueOf(TxCount) + " transactions");
                     }
 

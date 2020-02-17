@@ -10,6 +10,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors; 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import java.util.concurrent.TimeUnit;
 
 import main.java.cs223w2020.TransactionQueue;
 import main.java.cs223w2020.model.Operation;
@@ -89,7 +90,23 @@ public class TxProcessor implements Runnable
             }
             else{
                 //end mark transaction
+                while(txQueue.getSize()>0){
+                    try{
+                        Thread.sleep(1500);
+                    }catch(Exception ex) 
+                    { 
+                        System.out.println("Exception has been" + " caught" + ex); 
+                    }
+                }
+                threadPool.shutdown();
+                try {
+                    threadPool.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
                 resQueue.put(tx);
+
                 try
                 { 
                     resultAggregator.join(); 
@@ -107,7 +124,6 @@ public class TxProcessor implements Runnable
                 }
 
                 connectionPool.close();
-                threadPool.shutdown();
                 return;
             }
         }
